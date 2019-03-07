@@ -51,4 +51,4 @@ with open(path, mode='w') as f:
     f.writelines('\n'.join(lst1))
     f.write('\n')
     f.flush()
-    time.sleep(1)
+    #time.sleep(1)

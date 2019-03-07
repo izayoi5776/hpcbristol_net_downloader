@@ -8,4 +8,4 @@ download images and notes from www.hpcbristol.net
 
    this will save results as urls.txt in same directory.
 
-1. 
+1. run python3 download for download
