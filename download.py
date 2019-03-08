@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 import time
 import json
 import os
+from multiprocessing import Pool
 
 # get full url from soup tag a
 def a2url(a, url):
@@ -49,6 +50,7 @@ def createDirSafe(path):
 
 # level 2 main
 def level2(url):
+  url = url.replace('\n', '')
   [id, fjson, fjpg] = getFileNames(url)
   if(chkfiles(fjson, fjpg)):
     print("skip " + url)
@@ -68,9 +70,7 @@ url4 = "https://www.hpcbristol.net/download/image/28574"
 path = './urls.txt'
 with open(path, mode='r') as f:
   urls = f.readlines()
-  n = len(urls)
-  for i in range(n):
-    url = urls[i].replace('\n', '')
-    print(str(i) + "/" + str(n) + " ", end='')
-    level2(url)
-    #time.sleep(1)
+
+with Pool(5) as p:
+  p.map(level2, urls)
+
