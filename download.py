@@ -16,14 +16,19 @@ def url2soup(url):
   soup = BeautifulSoup(html, "html.parser")
   return soup
 
-# level2 return dict
+# download level2 html as dict
 def getlevel2dict(id, url):
   ret = {'z_id':id, 'z_baseurl':url}
   soup = url2soup(url)
+  # tags
   for tag in soup.select('div.field__label'):
     tagname = tag.get_text()
     tagtext = list(map(lambda x: x.get_text(), tag.parent.select('div.field__item')))
     ret.update({tagname:tagtext})
+  # get title
+  for tag in soup.select('h1.page-title span.text'):
+    ret.update({'title':tag.get_text()})
+  # download link
   for tag in soup.select('div.field__download li a'):
     ret.update({'z_download_url':a2url(tag,url)})
   return ret
@@ -60,12 +65,16 @@ def level2(url):
     # save json
     with open(fjson, mode='w') as f:
       json.dump(d, f, indent=2)
-    urllib.request.urlretrieve(d['z_download_url'], fjpg)
+    # download jpg only if not exists
+    if(not os.path.exists(fjpg)):
+      urllib.request.urlretrieve(d['z_download_url'], fjpg)
 
 # ------------------- MAIN -----------------
 url2 = "https://www.hpcbristol.net/visual/jc-s014"
 url3 = "https://www.hpcbristol.net/visual/yo-s19"
 url4 = "https://www.hpcbristol.net/download/image/28574"
+url5 = "https://www.hpcbristol.net/visual/bo01-077" # caption on mount
+url6 = "https://www.hpcbristol.net/visual/hv23-001" # no captions
 
 path = './urls.txt'
 with open(path, mode='r') as f:
